@@ -1,0 +1,26 @@
+---
+- name: To install the apche with some cutome config
+  hosts: appservers
+  become: true
+  vars_files:
+    - groups_vars/main.yml
+  tasks: 
+  - name: To install the apache
+    yum:
+      name: httpd
+      state: latest
+  - name: to take the backup 
+    copy: 
+     src: /etc/httpd/conf/httpd.conf
+     dest: /etc/httpd/conf/httpd.conf-bak
+     remote_src: yes 
+
+  - name: To remove the httpd.conf 
+    file:
+      path: /etc/httpd/conf/httpd.conf
+      state: absent
+  - name: To copy from the templates
+    template:
+      src: templates/httpd_conf.j2
+      dest: /etc/httpd/conf/httpd.conf
+

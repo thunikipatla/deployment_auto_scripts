@@ -1,0 +1,6 @@
+---
+- name: To take the exsting war files as backup 
+  copy: 
+    src: /opt/tomcat/webapps/*.war
+    dest: /opt/tomcat/backup-war
+  ignore_errors: true

@@ -1,0 +1,21 @@
+---
+- name: To download the tomcat tar file 
+  get_url:
+    url: http://apachemirror.wuchna.com/tomcat/tomcat-8/v8.5.51/bin/apache-tomcat-8.5.51.tar.gz
+    dest: /opt
+- name: To extract the tomcat tar file
+  unarchive: 
+    src: /opt/apache-tomcat-8.5.51.tar.gz
+    dest: /opt/
+    remote_src: yes
+
+- name: To rename the extracted tar file
+  shell: mv /opt/apache-tomcat-8.5.51 /opt/tomcat
+
+- name: To copy the systemd file for tomcat 
+  template:
+    src: ../templates/tomcat-service.j2
+    dest: /etc/systemd/system/tomcat.service
+
+- name: To enable the dameon 
+  shell: systemctl daemon-reload

@@ -1,0 +1,11 @@
+---
+- name: To check the java is installed ort not 
+  shell: which java | wc -l
+  register: java_check
+- debug: var=java_check
+
+- name: To install the java if it is not installed already 
+  yum:
+    name: java-1.8.0-openjdk-devel
+    state: latest
+  when: java_check.stdout == "0"

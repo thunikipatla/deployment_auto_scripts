@@ -1,0 +1,5 @@
+---
+- name: To start the tomcat
+  service: 
+    name: tomcat
+    state: started

@@ -1,0 +1,17 @@
+---
+- name: To install the apache on nodes
+  hosts: appservers
+  become: true
+  tasks: 
+  - name: To install the httpd 
+    yum: 
+      name: httpd
+      state: latest
+  - name: copy the index.htmi file to /var/www/html
+    copy: 
+      src: ./index.html
+      dest: /var/www/html
+  - name: To start the httpd
+    service: 
+      name: httpd
+      state: started

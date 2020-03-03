@@ -1,0 +1,45 @@
+---
+- name: To setup passwd less connection for the devops user 
+  hosts: appservers
+  become: true
+  tasks:
+  - name: check the user status 
+    shell: "cat /etc/passwd | grep devops | wc -l"
+    ignore_errors: true
+    register: user_status
+  - debug: var=user_status
+
+  - name: To create the user if not created alredy 
+    user: 
+      name: devops
+      state: present
+    register: user_creation
+    when: user_status.stdout == "0"
+
+  - name: To create the .ssh dir 
+    file: 
+      path: /home/devops/.ssh
+      state: directory 
+      owner: devops
+      group: devops
+    when: user_creation | success
+ 
+  - name: To create the auth file 
+    file: 
+      path: /home/devops/.ssh/authorized_keys
+      state: touch
+      owner: devops
+      group: devops
+    when: user_creation |success
+
+  - name: To copy public key from master to nodes 
+    authorized_key: 
+      user: devops
+      key: "{{ lookup('file', '/home/devops/.ssh/id_rsa.pub') }}" 
+    when: user_creation | success
+
+  - name: To add devops user to sudoers file 
+    lineinfile: 
+      path: /etc/sudoers
+      regexp: '^devops'
+      line: devops ALL=(ALL) NOPASSWD:ALL

@@ -1,0 +1,31 @@
+---
+- name: To create the User 
+  hosts: appservers
+  become: true
+  #vars:
+  #  user_name: "{{ name_of_the_user }}"
+  vars_files:
+    - groups_vars/main.yml
+  tasks: 
+  - name: To check the user status 
+    shell: "cat /etc/passwd | grep {{ user_name }} | wc -l"
+    ignore_errors: true
+    register: user_status
+  - debug: var=user_status
+  - name: To create the user
+    user: 
+      name: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          63366137616135633434336166626337333532343036373136633939653639303934646163323132
+          6665643430343635396435306363623430326439356538330a653734636338633362316332323937
+          30353434656138666639616336306364636665303334316466306665313062316435396536633231
+          3134373762633835640a336235616539316230663164623135613339646362643066656666343039
+          6365
+      #state: absent
+      state: present
+    when: user_status.stdout == "0"
+  - name: To print the path varible 
+    shell: "echo {{ path }}"
+    register: print
+  - debug: var=print
+  

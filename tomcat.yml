@@ -1,0 +1,9 @@
+---
+- name: To setup the tomcat 
+  hosts: appservers
+  become: true
+  vars_files:
+    - groups_vars/main.yml
+  roles:
+    - java
+    - user
