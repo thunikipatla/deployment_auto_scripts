@@ -1,6 +1,13 @@
 ---
+- name: To check the war files 
+  stat:
+    path: /opt/tomcat/webapps/openmrs
+  register: p
+ 
 - name: To take the exsting war files as backup 
   copy: 
-    src: /opt/tomcat/webapps/*.war
+    src: /opt/tomcat/webapps/openmrs.war
     dest: /opt/tomcat/backup-war
+    remote_src: true
+  when: p.stat is defined
   ignore_errors: true

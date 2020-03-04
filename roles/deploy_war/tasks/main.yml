@@ -1,6 +1,6 @@
 ---
 - name: To deploy the war file to app servers
   copy: 
-    src: /home/devops/openmrs.war
+    src: ./webapp/target/openmrs.war
     dest: /opt/tomcat/webapps
 
