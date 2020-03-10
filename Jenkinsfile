@@ -8,7 +8,7 @@ pipeline{
   }
   stage('Copy-Artifact-upstream'){
     steps{
-      copyArtifacts filter: 'webapp/target/openmrs.war', fingerprintArtifacts: true, projectName: 'openmrs-build'
+      copyArtifacts filter: 'webapp/target/openmrs.war', fingerprintArtifacts: true, projectName: 'openmrs-build', selector: lastWithArtifacts()
     }
   }
   stage('Deploy'){
