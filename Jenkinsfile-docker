@@ -1,0 +1,25 @@
+pipeline{
+  agent any 
+  stages{
+    stage('SCM'){
+     steps {
+      git 'https://github.com/thunikipatla/deployment_auto_scripts.git'
+     }
+    }
+    stage('Copy-artifact'){
+      steps{
+        copyArtifacts filter: 'webapp/target/openmrs.war', fingerprintArtifacts: true, projectName: 'openmrs-build', selector: lastWithArtifacts()
+      }
+    }
+    stage('Build-docker-image'){
+      steps{
+        sh ''' docker build -t openmrs:${BUILD_NUMBER} . '''
+      }
+    }
+    stage('Push-docker-hub'){
+      steps {
+        sh ''' docker push openmrs:${BUILD_NUMBER} '''
+      }
+    }
+  }
+}
