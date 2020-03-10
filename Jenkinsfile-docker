@@ -13,12 +13,12 @@ pipeline{
     }
     stage('Build-docker-image'){
       steps{
-        sh ''' docker build -t openmrs:${BUILD_NUMBER} . '''
+        sh ''' sudo docker build -t openmrs:${BUILD_NUMBER} . '''
       }
     }
     stage('Push-docker-hub'){
       steps {
-        sh ''' docker push openmrs:${BUILD_NUMBER} '''
+        sh ''' sudo docker push openmrs:${BUILD_NUMBER} '''
       }
     }
   }
